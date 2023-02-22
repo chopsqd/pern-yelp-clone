@@ -1,17 +1,15 @@
 const express = require('express')
 const morgan = require('morgan')
-const db = require('./db')
 require('dotenv').config()
+
+const {getAllRestaurants} = require('./controllers')
 
 const app = express()
 const PORT = process.env.PORT || 5000
 
 app.use(express.json())
 
-app.get('/api/v1/restaurants', async (req, res) => {
-    const result = await db.query("SELECT * FROM restaurants;")
-    res.json(result)
-})
+app.get('/api/v1/restaurants', getAllRestaurants)
 
 app.get('/api/v1/restaurants/:id', (req, res) => {
 })
