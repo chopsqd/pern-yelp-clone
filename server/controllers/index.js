@@ -2,7 +2,7 @@ const db = require("../db");
 
 const getAllRestaurants = async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM restaurants;")
+        const result = await db.query("SELECT * FROM restaurants")
         res.status(200).json({
             status: "success",
             data: {
@@ -15,6 +15,21 @@ const getAllRestaurants = async (req, res) => {
     }
 }
 
+const getOneRestaurant = async (req, res) => {
+    try {
+        const result = await db.query("SELECT * FROM restaurants WHERE id = $1", [req.params.id])
+        res.status(200).json({
+            status: "success",
+            data: {
+                restaurant: result.rows[0]
+            }
+        })
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
 module.exports = {
-    getAllRestaurants
+    getAllRestaurants,
+    getOneRestaurant
 }
