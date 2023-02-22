@@ -17,7 +17,47 @@ const getAllRestaurants = async (req, res) => {
 
 const getOneRestaurant = async (req, res) => {
     try {
-        const result = await db.query("SELECT * FROM restaurants WHERE id = $1", [req.params.id])
+        const result = await db.query(
+            "SELECT * FROM restaurants WHERE id = $1",
+            [req.params.id]
+        )
+
+        res.status(200).json({
+            status: "success",
+            data: {
+                restaurant: result.rows[0]
+            }
+        })
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+const createRestaurant = async (req, res) => {
+    try {
+        const result = await db.query(
+            "INSERT INTO restaurants (name, location, price_range) VALUES ($1, $2, $3) RETURNING *",
+            [req.body.name, req.body.location, req.body.price_range]
+        )
+
+        res.status(200).json({
+            status: "success",
+            data: {
+                restaurant: result.rows[0]
+            }
+        })
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+const createRestaurant = async (req, res) => {
+    try {
+        const result = await db.query(
+            "INSERT INTO restaurants (name, location, price_range) VALUES ($1, $2, $3) RETURNING *",
+            [req.body.name, req.body.location, req.body.price_range]
+        )
+
         res.status(200).json({
             status: "success",
             data: {
@@ -31,5 +71,6 @@ const getOneRestaurant = async (req, res) => {
 
 module.exports = {
     getAllRestaurants,
-    getOneRestaurant
+    getOneRestaurant,
+    createRestaurant
 }
