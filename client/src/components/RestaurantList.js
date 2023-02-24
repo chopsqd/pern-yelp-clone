@@ -22,6 +22,16 @@ const RestaurantList = () => {
         fetchData()
     }, [])
 
+    const handleDelete = async (id) => {
+        try {
+            if(!window.confirm('Are you sure you want to delete this restaurant?')) return
+            await RestaurantAPI.delete(`/${id}`)
+            setRestaurants(restaurants.filter(restaurant => restaurant.id !== id))
+        } catch (error) {
+            setError(error)
+        }
+    }
+
     if (loading) return <div className={"text-center"}>
         <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
@@ -30,6 +40,9 @@ const RestaurantList = () => {
 
     return (
         <div className={"list-group"}>
+            {error && <div className="alert alert-warning" role="alert">
+                Data fetching error: {error.message}. Try again later...
+            </div>}
             <table className="table table-hover table-dark">
                 <thead>
                 <tr className={"bg-primary"}>
@@ -52,7 +65,7 @@ const RestaurantList = () => {
                             <button className="btn btn-warning">Update</button>
                         </td>
                         <td>
-                            <button className="btn btn-danger">Delete</button>
+                            <button onClick={() => handleDelete(restaurant.id)} className="btn btn-danger">Delete</button>
                         </td>
                     </tr>
                 )}
@@ -60,10 +73,6 @@ const RestaurantList = () => {
             </table>
 
             {!restaurants.length && <b className={"text-center"}>There are no restaurants yet</b>}
-
-            {error && <div className="alert alert-warning" role="alert">
-                Data fetching error: {error.message}. Try again later...
-            </div>}
         </div>
     );
 };
