@@ -1,30 +1,69 @@
-import React from 'react';
+import React, {useEffect, useState, useContext} from 'react';
+import RestaurantAPI from '../api/RestaurantAPI';
+import {RestaurantsContext} from "../context/RestaurantsContext";
 
 const RestaurantList = () => {
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const {restaurants, setRestaurants} = useContext(RestaurantsContext)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true)
+                const response = await RestaurantAPI.get('/')
+                setRestaurants(response.data.data.restaurants)
+                setLoading(false)
+            } catch (error) {
+                setError(error)
+            }
+        }
+
+        fetchData()
+    }, [])
+
+    if (loading) return <div className={"text-center"}>
+        <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+        </div>
+    </div>
+
     return (
         <div className={"list-group"}>
             <table className="table table-hover table-dark">
                 <thead>
-                    <tr className={"bg-primary"}>
-                        <th scope={"col"}>Restaurant</th>
-                        <th scope={"col"}>Location</th>
-                        <th scope={"col"}>Price Range</th>
-                        <th scope={"col"}>Rating</th>
-                        <th scope={"col"}>Edit</th>
-                        <th scope={"col"}>Delete</th>
-                    </tr>
+                <tr className={"bg-primary"}>
+                    <th scope={"col"}>Restaurant</th>
+                    <th scope={"col"}>Location</th>
+                    <th scope={"col"}>Price Range</th>
+                    <th scope={"col"}>Rating</th>
+                    <th scope={"col"}>Edit</th>
+                    <th scope={"col"}>Delete</th>
+                </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>pizza city</td>
-                        <td>moscow</td>
-                        <td>$$</td>
+                {restaurants && restaurants.map(restaurant =>
+                    <tr key={restaurant.id}>
+                        <td>{restaurant.name}</td>
+                        <td>{restaurant.location}</td>
+                        <td>{"$".repeat(restaurant.price_range)}</td>
                         <td>Rating</td>
-                        <td><button className="btn btn-warning">Update</button></td>
-                        <td><button className="btn btn-danger">Delete</button></td>
+                        <td>
+                            <button className="btn btn-warning">Update</button>
+                        </td>
+                        <td>
+                            <button className="btn btn-danger">Delete</button>
+                        </td>
                     </tr>
+                )}
                 </tbody>
             </table>
+
+            {!restaurants.length && <b className={"text-center"}>There are no restaurants yet</b>}
+
+            {error && <div className="alert alert-warning" role="alert">
+                Data fetching error: {error.message}. Try again later...
+            </div>}
         </div>
     );
 };

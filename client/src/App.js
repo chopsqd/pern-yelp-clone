@@ -17,7 +17,7 @@ const App = () => {
                         <Route exact path="/restaurants/:id/update" element={<UpdatePage/>}/>
                     </Routes>
                 </div>
-                
+
             </RestaurantsContextProvider>
         </BrowserRouter>
     );
