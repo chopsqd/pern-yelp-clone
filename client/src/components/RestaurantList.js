@@ -1,8 +1,10 @@
 import React, {useEffect, useState, useContext} from 'react';
 import RestaurantAPI from '../api/RestaurantAPI';
+import {useNavigate} from 'react-router-dom'
 import {RestaurantsContext} from "../context/RestaurantsContext";
 
 const RestaurantList = () => {
+    const navigate = useNavigate()
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
     const {restaurants, setRestaurants} = useContext(RestaurantsContext)
@@ -62,7 +64,7 @@ const RestaurantList = () => {
                         <td>{"$".repeat(restaurant.price_range)}</td>
                         <td>Rating</td>
                         <td>
-                            <button className="btn btn-warning">Update</button>
+                            <button onClick={() => navigate(`/restaurants/${restaurant.id}/update`)} className="btn btn-warning">Update</button>
                         </td>
                         <td>
                             <button onClick={() => handleDelete(restaurant.id)} className="btn btn-danger">Delete</button>
