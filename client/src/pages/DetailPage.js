@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {RestaurantsContext} from "../context/RestaurantsContext";
 import RestaurantAPI from "../api/RestaurantAPI";
-import StarRating from "../components/StarRating";
 import Reviews from "../components/Reviews";
 import AddReview from "../components/AddReview";
 
@@ -35,7 +34,7 @@ const DetailPage = () => {
 
     return (
         <>
-            <h1 className={"text-center display-1"}>{selectedRestaurant.restaurant.name}</h1>
+            <h1 className={"text-center display-1"}>{selectedRestaurant?.restaurant?.name}</h1>
             <Reviews reviews={selectedRestaurant.reviews}/>
             <AddReview />
 

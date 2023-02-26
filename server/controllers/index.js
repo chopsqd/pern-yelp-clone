@@ -101,10 +101,33 @@ const deleteRestaurant = async (req, res) => {
     }
 }
 
+const createReview = async (req, res) => {
+    try {
+        if(!req.body.name || !req.body.rating || !req.body.review) {
+            return res.status(500).json({message: 'All fields must be filled in!'})
+        }
+
+        const result = await db.query(
+            "INSERT INTO reviews (restaurant_id, name, review, rating) VALUES ($1, $2, $3, $4) RETURNING *",
+            [req.params.id, req.body.name, req.body.review, req.body.rating]
+        )
+
+        res.status(200).json({
+            status: "success",
+            data: {
+                review: result.rows[0]
+            }
+        })
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
 module.exports = {
     getAllRestaurants,
     getOneRestaurant,
     createRestaurant,
     updateRestaurant,
-    deleteRestaurant
+    deleteRestaurant,
+    createReview
 }

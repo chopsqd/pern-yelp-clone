@@ -1,7 +1,10 @@
 import React, {useState} from 'react';
 import RestaurantAPI from "../api/RestaurantAPI";
+import {useNavigate, useParams} from "react-router-dom";
 
 const AddReview = () => {
+    const {id} = useParams()
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({})
     const [error, setError] = useState(null)
 
@@ -10,7 +13,8 @@ const AddReview = () => {
     const handleSubmit = async (event) => {
         event.preventDefault()
         try {
-            await RestaurantAPI.post('/', {...formData})
+            await RestaurantAPI.post(`/${id}/reviews`, {...formData})
+            navigate('/')
         } catch (error) {
             setError(error.message)
         }
