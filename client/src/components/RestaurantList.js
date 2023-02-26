@@ -2,6 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import RestaurantAPI from '../api/RestaurantAPI';
 import {useNavigate} from 'react-router-dom'
 import {RestaurantsContext} from "../context/RestaurantsContext";
+import StarRating from "./StarRating";
 
 const RestaurantList = () => {
     const navigate = useNavigate()
@@ -40,6 +41,17 @@ const RestaurantList = () => {
         navigate(`/restaurants/${id}/update`)
     }
 
+    const renderRating = (restaurant) => {
+        if(!restaurant.count) {
+            return <span className={"text-warning ml-1"}>0 reviews</span>
+        }
+
+        return <>
+            <StarRating rating={restaurant.average_rating}/>
+            <span className={"text-warning ml-1"}>({restaurant.count})</span>
+        </>
+    }
+
     if (loading && !error) return <div className={"text-center"}>
         <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
@@ -68,7 +80,7 @@ const RestaurantList = () => {
                         <td>{restaurant.name}</td>
                         <td>{restaurant.location}</td>
                         <td>{"$".repeat(restaurant.price_range)}</td>
-                        <td>Rating</td>
+                        <td>{renderRating(restaurant)}</td>
                         <td>
                             <button onClick={(event) => handleUpdate(event, restaurant.id)} className="btn btn-warning">Update</button>
                         </td>
