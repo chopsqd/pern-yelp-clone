@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react';
 import RestaurantAPI from "../api/RestaurantAPI";
 import {RestaurantsContext} from "../context/RestaurantsContext";
+import {ErrorAlert} from "./index";
 
 const AddRestaurant = () => {
     const [error, setError] = useState(null)
@@ -59,7 +60,7 @@ const AddRestaurant = () => {
                 </div>
             </form>
 
-            {error && <div className="alert alert-warning mt-3" role="alert">{error}</div>}
+            {error && <ErrorAlert error={error} />}
         </div>
     );
 };

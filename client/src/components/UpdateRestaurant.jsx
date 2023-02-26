@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
 import RestaurantAPI from "../api/RestaurantAPI";
+import {ErrorAlert, Loader} from "./index";
 
 const UpdateRestaurant = () => {
     const {id} = useParams()
@@ -36,17 +37,11 @@ const UpdateRestaurant = () => {
         }
     }
 
-    if (loading && !error) return <div className={"text-center"}>
-        <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
-        </div>
-    </div>
+    if (loading && !error) return <Loader />
 
     return (
         <div>
-            {error && <div className="alert alert-warning" role="alert">
-                Data fetching error: {error.message}. Try again later...
-            </div>}
+            {error && <ErrorAlert error={error.message} />}
             <form>
                 <div className="form-group">
                     <label htmlFor="name">Name</label>

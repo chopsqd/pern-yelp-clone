@@ -2,7 +2,7 @@ import React, {useEffect, useState, useContext} from 'react';
 import RestaurantAPI from '../api/RestaurantAPI';
 import {useNavigate} from 'react-router-dom'
 import {RestaurantsContext} from "../context/RestaurantsContext";
-import StarRating from "./StarRating";
+import {StarRating, ErrorAlert, Loader} from "./index";
 
 const RestaurantList = () => {
     const navigate = useNavigate()
@@ -52,17 +52,11 @@ const RestaurantList = () => {
         </>
     }
 
-    if (loading && !error) return <div className={"text-center"}>
-        <div className="spinner-border text-primary" role="status">
-            <span className="sr-only">Loading...</span>
-        </div>
-    </div>
+    if (loading && !error) return <Loader />
 
     return (
         <div className={"list-group"}>
-            {error && <div className="alert alert-warning" role="alert">
-                Data fetching error: {error.message}. Try again later...
-            </div>}
+            {error && <ErrorAlert error={error.message} />}
             <table className="table table-hover table-dark">
                 <thead>
                 <tr className={"bg-primary"}>

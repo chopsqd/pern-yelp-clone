@@ -1,7 +1,5 @@
 import React from 'react';
-import Header from "../components/Header";
-import AddRestaurant from "../components/AddRestaurant";
-import RestaurantList from "../components/RestaurantList";
+import {Header, AddRestaurant, RestaurantList} from "../components";
 
 const Home = () => {
     return (

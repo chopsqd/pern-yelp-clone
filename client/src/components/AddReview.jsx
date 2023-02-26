@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import RestaurantAPI from "../api/RestaurantAPI";
 import {useNavigate, useParams} from "react-router-dom";
+import {ErrorAlert} from "./index";
 
 const AddReview = () => {
     const {id} = useParams()
@@ -22,7 +23,7 @@ const AddReview = () => {
 
     return (
         <div className={"mb-2"}>
-            {error && <div className="alert alert-warning mt-3" role="alert">{error}</div>}
+            {error && <ErrorAlert error={error} />}
             <form>
                 <div className="form-row">
                     <div className="form-group col-8">
