@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router-dom";
 import {RestaurantsContext} from "../context/RestaurantsContext";
 import RestaurantAPI from "../api/RestaurantAPI";
+import StarRating from "../components/StarRating";
 
 const DetailPage = () => {
     const {id} = useParams()
@@ -32,6 +33,7 @@ const DetailPage = () => {
 
     return (
         <div>
+            {selectedRestaurant && <StarRating rating={selectedRestaurant.price_range}/>}
             {error && <div className="alert alert-warning" role="alert">
                 Data fetching error: {error.message}. Try again later...
             </div>}
