@@ -1,9 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import RestaurantAPI from "../api/RestaurantAPI";
 
 const UpdateRestaurant = () => {
     const {id} = useParams()
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({})
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -25,11 +26,17 @@ const UpdateRestaurant = () => {
         fetchData()
     }, [])
 
-    const handleSubmit = () => {
-        e.preventDefault()
+    const handleSubmit = async (event) => {
+        event.preventDefault()
+        try {
+            await RestaurantAPI.put(`/${id}`, {...formData})
+            navigate('/')
+        } catch (error) {
+            setError(error)
+        }
     }
 
-    if (loading) return <div className={"text-center"}>
+    if (loading && !error) return <div className={"text-center"}>
         <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
         </div>

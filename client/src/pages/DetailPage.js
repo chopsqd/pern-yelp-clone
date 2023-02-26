@@ -1,9 +1,40 @@
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
+import {useParams} from "react-router-dom";
+import {RestaurantsContext} from "../context/RestaurantsContext";
+import RestaurantAPI from "../api/RestaurantAPI";
 
 const DetailPage = () => {
+    const {id} = useParams()
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const {selectedRestaurant, setSelectedRestaurant} = useContext(RestaurantsContext)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true)
+                const response = await RestaurantAPI.get(`/${id}`)
+                setSelectedRestaurant(response.data.data.restaurant || {})
+                setLoading(false)
+            } catch (error) {
+                setError(error)
+            }
+        }
+
+        fetchData()
+    }, [])
+
+    if (loading && !error) return <div className={"text-center"}>
+        <div className="spinner-border text-primary" role="status">
+            <span className="sr-only">Loading...</span>
+        </div>
+    </div>
+
     return (
         <div>
-            DetailPage
+            {error && <div className="alert alert-warning" role="alert">
+                Data fetching error: {error.message}. Try again later...
+            </div>}
         </div>
     );
 };

@@ -24,7 +24,8 @@ const RestaurantList = () => {
         fetchData()
     }, [])
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (event, id) => {
+        event.stopPropagation()
         try {
             if(!window.confirm('Are you sure you want to delete this restaurant?')) return
             await RestaurantAPI.delete(`/${id}`)
@@ -34,7 +35,12 @@ const RestaurantList = () => {
         }
     }
 
-    if (loading) return <div className={"text-center"}>
+    const handleUpdate = (event, id) => {
+        event.stopPropagation()
+        navigate(`/restaurants/${id}/update`)
+    }
+
+    if (loading && !error) return <div className={"text-center"}>
         <div className="spinner-border text-primary" role="status">
             <span className="sr-only">Loading...</span>
         </div>
@@ -58,16 +64,16 @@ const RestaurantList = () => {
                 </thead>
                 <tbody>
                 {restaurants && restaurants.map(restaurant =>
-                    <tr key={restaurant.id}>
+                    <tr key={restaurant.id} onClick={() => navigate(`/restaurants/${restaurant.id}`)} style={{cursor: 'pointer'}}>
                         <td>{restaurant.name}</td>
                         <td>{restaurant.location}</td>
                         <td>{"$".repeat(restaurant.price_range)}</td>
                         <td>Rating</td>
                         <td>
-                            <button onClick={() => navigate(`/restaurants/${restaurant.id}/update`)} className="btn btn-warning">Update</button>
+                            <button onClick={(event) => handleUpdate(event, restaurant.id)} className="btn btn-warning">Update</button>
                         </td>
                         <td>
-                            <button onClick={() => handleDelete(restaurant.id)} className="btn btn-danger">Delete</button>
+                            <button onClick={(event) => handleDelete(event, restaurant.id)} className="btn btn-danger">Delete</button>
                         </td>
                     </tr>
                 )}
