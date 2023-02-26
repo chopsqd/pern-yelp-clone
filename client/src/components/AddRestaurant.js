@@ -29,7 +29,6 @@ const AddRestaurant = () => {
                             placeholder={"Name"}
                             className={"form-control"}
                             name={"name"}
-                            value={formData.name}
                             onChange={handleChange}
                         />
                     </div>
@@ -39,7 +38,6 @@ const AddRestaurant = () => {
                             placeholder={"Location"}
                             className={"form-control"}
                             name={"location"}
-                            value={formData.location}
                             onChange={handleChange}
                         />
                     </div>

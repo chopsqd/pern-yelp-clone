@@ -5,13 +5,13 @@ const StarRating = ({rating}) => {
 
     for(let i = 1; i <= 5; i++) {
         if( i <= rating) {
-            stars.push(<i key={i} className={"fas fa-star"}/>)
+            stars.push(<i key={i} className={"fas fa-star text-warning"}/>)
         }
         else if( i === Math.ceil(rating) && !Number.isInteger(rating)) {
-            stars.push(<i key={i} className={"fas fa-star-half-alt"}/>)
+            stars.push(<i key={i} className={"fas fa-star-half-alt text-warning"}/>)
         }
         else {
-            stars.push(<i key={i} className={"far fa-star"}/>)
+            stars.push(<i key={i} className={"far fa-star text-warning"}/>)
         }
     }
 
