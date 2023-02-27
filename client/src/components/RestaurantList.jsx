@@ -3,37 +3,27 @@ import RestaurantAPI from '../api/RestaurantAPI';
 import {useNavigate} from 'react-router-dom'
 import {RestaurantsContext} from "../context/RestaurantsContext";
 import {StarRating, ErrorAlert, Loader} from "./index";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchRestaurants} from "../redux/slices/restaurantSlice";
 
 const RestaurantList = () => {
     const navigate = useNavigate()
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const {restaurants, setRestaurants} = useContext(RestaurantsContext)
+    const {loading, error, restaurants} = useSelector(state => state.restaurants)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const response = await RestaurantAPI.get('/')
-                setRestaurants(response.data.data.restaurants)
-                setLoading(false)
-            } catch (error) {
-                setError(error)
-            }
-        }
-
-        fetchData()
+        dispatch(fetchRestaurants())
     }, [])
 
     const handleDelete = async (event, id) => {
-        event.stopPropagation()
-        try {
-            if(!window.confirm('Are you sure you want to delete this restaurant?')) return
-            await RestaurantAPI.delete(`/${id}`)
-            setRestaurants(restaurants.filter(restaurant => restaurant.id !== id))
-        } catch (error) {
-            setError(error)
-        }
+        // event.stopPropagation()
+        // try {
+        //     if(!window.confirm('Are you sure you want to delete this restaurant?')) return
+        //     await RestaurantAPI.delete(`/${id}`)
+        //     setRestaurants(restaurants.filter(restaurant => restaurant.id !== id))
+        // } catch (error) {
+        //     setError(error)
+        // }
     }
 
     const handleUpdate = (event, id) => {
