@@ -1,40 +1,27 @@
 import React, {useEffect, useState} from 'react';
 import {useNavigate, useParams} from "react-router-dom";
-import RestaurantAPI from "../api/RestaurantAPI";
 import {ErrorAlert, Loader} from "./index";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchOneRestaurant, updateRestaurant} from "../redux/slices/restaurantSlice";
 
 const UpdateRestaurant = () => {
     const {id} = useParams()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({})
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false)
+
+    const {loading, error, selectedRestaurant} = useSelector(state => state.restaurants)
+    const dispatch = useDispatch()
 
     const handleChange = (event) => setFormData(prevState => ({...prevState, [event.target.name]: event.target.value}))
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const response = await RestaurantAPI.get(`/${id}`)
-                setFormData(response.data.data.restaurant || {})
-                setLoading(false)
-            } catch (error) {
-                setError(error)
-            }
-        }
-
-        fetchData()
+        dispatch(fetchOneRestaurant(id))
     }, [])
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        try {
-            await RestaurantAPI.put(`/${id}`, {...formData})
-            navigate('/')
-        } catch (error) {
-            setError(error)
-        }
+        dispatch(updateRestaurant({id, formData}))
+        navigate('/')
     }
 
     if (loading && !error) return <Loader />
@@ -48,9 +35,8 @@ const UpdateRestaurant = () => {
                     <input
                         id={"name"}
                         type="text"
-                        placeholder={"Name"}
+                        placeholder={selectedRestaurant?.restaurant?.name}
                         name={"name"}
-                        value={formData.name}
                         onChange={handleChange}
                         className={"form-control"}
                     />
@@ -61,10 +47,9 @@ const UpdateRestaurant = () => {
                     <input
                         id={"location"}
                         type="text"
-                        placeholder={"Location"}
+                        placeholder={selectedRestaurant?.restaurant?.location}
                         className={"form-control"}
                         name={"location"}
-                        value={formData.location}
                         onChange={handleChange}
                     />
                 </div>
@@ -73,7 +58,7 @@ const UpdateRestaurant = () => {
                     <label htmlFor="price_range">Price Range</label>
                     <input
                         id={"price_range"}
-                        placeholder={3}
+                        placeholder={selectedRestaurant?.restaurant?.price_range}
                         min={0}
                         max={5}
                         type="number"

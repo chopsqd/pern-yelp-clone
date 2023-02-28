@@ -1,10 +1,8 @@
-import React, {useEffect, useState, useContext} from 'react';
-import RestaurantAPI from '../api/RestaurantAPI';
+import React, {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom'
-import {RestaurantsContext} from "../context/RestaurantsContext";
-import {StarRating, ErrorAlert, Loader} from "./index";
+import {ErrorAlert, Loader, StarRating} from "./index";
 import {useDispatch, useSelector} from "react-redux";
-import {fetchRestaurants} from "../redux/slices/restaurantSlice";
+import {deleteRestaurant, fetchRestaurants} from "../redux/slices/restaurantSlice";
 
 const RestaurantList = () => {
     const navigate = useNavigate()
@@ -16,14 +14,9 @@ const RestaurantList = () => {
     }, [])
 
     const handleDelete = async (event, id) => {
-        // event.stopPropagation()
-        // try {
-        //     if(!window.confirm('Are you sure you want to delete this restaurant?')) return
-        //     await RestaurantAPI.delete(`/${id}`)
-        //     setRestaurants(restaurants.filter(restaurant => restaurant.id !== id))
-        // } catch (error) {
-        //     setError(error)
-        // }
+        event.stopPropagation()
+        if (!window.confirm('Are you sure you want to delete this restaurant?')) return
+        dispatch(deleteRestaurant(id))
     }
 
     const handleUpdate = (event, id) => {
@@ -32,7 +25,7 @@ const RestaurantList = () => {
     }
 
     const renderRating = (restaurant) => {
-        if(!restaurant.count) {
+        if (!restaurant.count) {
             return <span className={"text-warning ml-1"}>0 reviews</span>
         }
 
@@ -42,11 +35,11 @@ const RestaurantList = () => {
         </>
     }
 
-    if (loading && !error) return <Loader />
+    if (loading && !error) return <Loader/>
 
     return (
         <div className={"list-group"}>
-            {error && <ErrorAlert error={error.message} />}
+            {error && <ErrorAlert error={error.message}/>}
             <table className="table table-hover table-dark">
                 <thead>
                 <tr className={"bg-primary"}>
@@ -60,16 +53,21 @@ const RestaurantList = () => {
                 </thead>
                 <tbody>
                 {restaurants && restaurants.map(restaurant =>
-                    <tr key={restaurant.id} onClick={() => navigate(`/restaurants/${restaurant.id}`)} style={{cursor: 'pointer'}}>
+                    <tr key={restaurant.id} onClick={() => navigate(`/restaurants/${restaurant.id}`)}
+                        style={{cursor: 'pointer'}}>
                         <td>{restaurant.name}</td>
                         <td>{restaurant.location}</td>
                         <td>{"$".repeat(restaurant.price_range)}</td>
                         <td>{renderRating(restaurant)}</td>
                         <td>
-                            <button onClick={(event) => handleUpdate(event, restaurant.id)} className="btn btn-warning">Update</button>
+                            <button onClick={(event) => handleUpdate(event, restaurant.id)}
+                                    className="btn btn-warning">Update
+                            </button>
                         </td>
                         <td>
-                            <button onClick={(event) => handleDelete(event, restaurant.id)} className="btn btn-danger">Delete</button>
+                            <button onClick={(event) => handleDelete(event, restaurant.id)}
+                                    className="btn btn-danger">Delete
+                            </button>
                         </td>
                     </tr>
                 )}

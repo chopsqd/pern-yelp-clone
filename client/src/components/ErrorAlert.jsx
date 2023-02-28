@@ -2,7 +2,7 @@ import React from 'react';
 
 const ErrorAlert = ({error}) => {
     return <>
-        <div className='alert alert-warning d-flex align-items-center' role="alert">
+        {error && <div className='alert alert-warning d-flex align-items-center' role="alert">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
                  className="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" role="img"
                  aria-label="Warning:">
@@ -12,7 +12,7 @@ const ErrorAlert = ({error}) => {
             <div className={"ml-3"}>
                 Some error occurred: {error}. Try again later...
             </div>
-        </div>
+        </div>}
     </>
 };
 

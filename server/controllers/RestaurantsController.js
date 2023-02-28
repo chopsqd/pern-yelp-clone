@@ -110,7 +110,7 @@ class RestaurantsController {
     async deleteRestaurant(req, res) {
         try {
             const result = await db.query(
-                "DELETE FROM restaurants WHERE id = $1",
+                "DELETE FROM restaurants WHERE id = $1 RETURNING *",
                 [req.params.id]
             )
 

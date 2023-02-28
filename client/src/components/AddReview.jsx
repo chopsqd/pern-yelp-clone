@@ -1,24 +1,23 @@
 import React, {useState} from 'react';
-import RestaurantAPI from "../api/RestaurantAPI";
 import {useNavigate, useParams} from "react-router-dom";
 import {ErrorAlert} from "./index";
+import {useDispatch, useSelector} from "react-redux";
+import {addReview} from "../redux/slices/restaurantSlice";
 
 const AddReview = () => {
     const {id} = useParams()
     const navigate = useNavigate()
     const [formData, setFormData] = useState({})
-    const [error, setError] = useState(null)
+
+    const {error} = useSelector(state => state.restaurants)
+    const dispatch = useDispatch()
 
     const handleChange = (event) => setFormData(prevState => ({...prevState, [event.target.name]: event.target.value}))
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        try {
-            await RestaurantAPI.post(`/${id}/reviews`, {...formData})
-            navigate('/')
-        } catch (error) {
-            setError(error.message)
-        }
+        dispatch(addReview({id, formData}))
+        navigate('/')
     }
 
     return (

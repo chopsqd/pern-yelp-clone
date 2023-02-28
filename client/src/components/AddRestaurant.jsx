@@ -1,28 +1,23 @@
-import React, {useState, useContext} from 'react';
-import RestaurantAPI from "../api/RestaurantAPI";
-import {RestaurantsContext} from "../context/RestaurantsContext";
+import React, {useState} from 'react';
 import {ErrorAlert} from "./index";
+import {useDispatch, useSelector} from "react-redux";
+import {addRestaurant} from "../redux/slices/restaurantSlice";
 
 const AddRestaurant = () => {
-    const [error, setError] = useState(null)
     const [formData, setFormData] = useState({})
-    const {addRestaurant} = useContext(RestaurantsContext)
+    const {error} = useSelector(state => state.restaurants)
+    const dispatch = useDispatch()
 
     const handleChange = (event) => setFormData(prevState => ({...prevState, [event.target.name]: event.target.value}))
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        try {
-            const response = await RestaurantAPI.post('/', {...formData})
-            addRestaurant(response.data.data.restaurant)
-        } catch (error) {
-            setError(error.response.data.message)
-        }
+        dispatch(addRestaurant(formData))
     }
 
     return (
         <div className={"mb-4"}>
-            <form>
+            <form className={"mb-2"}>
                 <div className="form-row d-flex justify-content-between align-items-center">
                     <div className="col">
                         <input

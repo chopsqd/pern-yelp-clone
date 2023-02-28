@@ -1,28 +1,16 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {useParams} from "react-router-dom";
-import {RestaurantsContext} from "../context/RestaurantsContext";
-import RestaurantAPI from "../api/RestaurantAPI";
-import {Reviews, AddReview, StarRating, ErrorAlert, Loader} from "../components";
+import {AddReview, ErrorAlert, Loader, Reviews, StarRating} from "../components";
+import {useDispatch, useSelector} from "react-redux";
+import {fetchOneRestaurant} from "../redux/slices/restaurantSlice";
 
 const DetailPage = () => {
     const {id} = useParams()
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false)
-    const {selectedRestaurant, setSelectedRestaurant} = useContext(RestaurantsContext)
+    const {loading, error, selectedRestaurant} = useSelector(state => state.restaurants)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true)
-                const response = await RestaurantAPI.get(`/${id}`)
-                setSelectedRestaurant(response.data.data || {})
-                setLoading(false)
-            } catch (error) {
-                setError(error)
-            }
-        }
-
-        fetchData()
+        dispatch(fetchOneRestaurant(id))
     }, [])
 
     if (loading && !error) return <Loader />
